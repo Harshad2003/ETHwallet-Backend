@@ -1,3 +1,4 @@
+Try the live mock Web3 wallet: https://ethwallet-app.vercel.app/
 # ETHwallet Flask Backend - SQLite Version
 
 This is a clean, modular, and production-ready backend for a mock Web3 wallet application. Built with Flask, JWT authentication, SQLite database, and comprehensive crypto utilities.
