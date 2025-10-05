@@ -83,38 +83,46 @@ The collection includes environment variables that auto-populate:
 11. **List User Wallets**
     - Endpoint: `GET /api/wallet/list`
     - Expected: 200 OK with array of user wallets
+    - **Query Parameter**: `include_mnemonics=false` (default)
+    - **⚠️ DANGEROUS**: `include_mnemonics=true` - ONLY for development!
+
+12. **List User Wallets (WITH MNEMONICS - DEV ONLY)**
+    - Endpoint: `GET /api/wallet/list?include_mnemonics=true`
+    - **⚠️ SECURITY RISK**: Returns decrypted mnemonics
+    - **ONLY USE FOR DEVELOPMENT/TESTING!**
+    - Expected: 200 OK with wallets including mnemonic phrases
 
 ### **Phase 3: Price & Conversion Testing**
 
-12. **Get ETH Price**
+13. **Get ETH Price**
     - Endpoint: `GET /api/wallet/price/eth`
     - Expected: 200 OK with current ETH price in USD
 
-13. **Convert USD to ETH**
+14. **Convert USD to ETH**
     - Endpoint: `POST /api/wallet/price/convert`
     - Body: `{"usd_amount": 1000.0}`
     - Expected: 200 OK with ETH amount and conversion rate
 
 ### **Phase 4: Transaction Testing**
 
-14. **Prepare Transfer (ETH)**
+15. **Prepare Transfer (ETH)**
     - Endpoint: `POST /api/wallet/transfer/prepare`
     - Body: Set from_address, to_address, amount
     - Expected: 200 OK with transfer message
     - **Auto-saves**: `transfer_message`
 
-15. **Prepare Transfer (USD)**
+16. **Prepare Transfer (USD)**
     - Endpoint: `POST /api/wallet/transfer/prepare`
     - Body: Set from_address, to_address, amount_usd
     - Expected: 200 OK with transfer message and ETH amount
 
-16. **Sign Message**
+17. **Sign Message**
     - Endpoint: `POST /api/wallet/sign-message`
     - Body: Use auto-saved `transfer_message`, `wallet_address`, `mnemonic_phrase`
     - Expected: 200 OK with signature
     - **Auto-saves**: `signature`
 
-17. **Execute Transfer**
+18. **Execute Transfer**
     - Endpoint: `POST /api/wallet/transfer/execute`
     - Body: Use auto-saved `transfer_message`, `signature`, `wallet_address`
     - Expected: 200 OK with transaction data

@@ -1,6 +1,6 @@
 """
 Email service for CypherD Wallet Backend
-BULLETPROOF email notifications for transactions
+BULLETPROOF email notifications using proven SellMyShow configuration
 """
 
 import smtplib
@@ -8,21 +8,26 @@ import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 
 class EmailService:
-    """Service class for email operations"""
+    """Service class for email operations - BULLETPROOF configuration"""
     
     def __init__(self, smtp_server=None, smtp_port=None, username=None, password=None):
-        self.smtp_server = smtp_server or 'smtp.gmail.com'
-        self.smtp_port = smtp_port or 587
-        self.username = username
-        self.password = password
+        # Use proven SellMyShow configuration as default
+        self.smtp_server = smtp_server or os.environ.get('SMTP_SERVER', 'mail.privateemail.com')
+        self.smtp_port = smtp_port or int(os.environ.get('SMTP_PORT', 587))
+        self.username = username or os.environ.get('SMTP_USERNAME', 'tickets@sellmyshow.com')
+        self.password = password or os.environ.get('SMTP_PASSWORD', 'HarSah$Bt1ckets$')
         self.use_tls = True
     
     def send_transaction_notification(self, to_email, transaction_data):
-        """Send transaction notification email"""
+        """Send transaction notification email using proven SellMyShow method"""
         try:
             if not self.username or not self.password:
                 logger.warning("Email credentials not configured, skipping email notification")
@@ -31,30 +36,11 @@ class EmailService:
                     'error': 'Email service not configured'
                 }
             
-            # Create message
-            msg = MIMEMultipart()
-            msg['From'] = self.username
-            msg['To'] = to_email
-            msg['Subject'] = f"CypherD Wallet - Transaction Notification"
+            subject = f"CypherD Wallet - Transaction Notification"
+            html_body = self._create_transaction_email_body(transaction_data)
             
-            # Create email body
-            body = self._create_transaction_email_body(transaction_data)
-            msg.attach(MIMEText(body, 'html'))
-            
-            # Send email
-            server = smtplib.SMTP(self.smtp_server, self.smtp_port)
-            if self.use_tls:
-                server.starttls()
-            server.login(self.username, self.password)
-            
-            text = msg.as_string()
-            server.sendmail(self.username, to_email, text)
-            server.quit()
-            
-            return {
-                'success': True,
-                'message': 'Transaction notification sent successfully'
-            }
+            # Use proven SellMyShow email sending method
+            return self._send_email(to_email, subject, html_body)
             
         except Exception as e:
             logger.error(f"Send transaction notification error: {str(e)}")
@@ -64,7 +50,7 @@ class EmailService:
             }
     
     def send_wallet_created_notification(self, to_email, wallet_data):
-        """Send wallet created notification email"""
+        """Send wallet created notification email using proven SellMyShow method"""
         try:
             if not self.username or not self.password:
                 logger.warning("Email credentials not configured, skipping email notification")
@@ -73,30 +59,11 @@ class EmailService:
                     'error': 'Email service not configured'
                 }
             
-            # Create message
-            msg = MIMEMultipart()
-            msg['From'] = self.username
-            msg['To'] = to_email
-            msg['Subject'] = f"CypherD Wallet - New Wallet Created"
+            subject = f"CypherD Wallet - New Wallet Created"
+            html_body = self._create_wallet_created_email_body(wallet_data)
             
-            # Create email body
-            body = self._create_wallet_created_email_body(wallet_data)
-            msg.attach(MIMEText(body, 'html'))
-            
-            # Send email
-            server = smtplib.SMTP(self.smtp_server, self.smtp_port)
-            if self.use_tls:
-                server.starttls()
-            server.login(self.username, self.password)
-            
-            text = msg.as_string()
-            server.sendmail(self.username, to_email, text)
-            server.quit()
-            
-            return {
-                'success': True,
-                'message': 'Wallet created notification sent successfully'
-            }
+            # Use proven SellMyShow email sending method
+            return self._send_email(to_email, subject, html_body)
             
         except Exception as e:
             logger.error(f"Send wallet created notification error: {str(e)}")
@@ -105,41 +72,110 @@ class EmailService:
                 'error': f'Failed to send notification: {str(e)}'
             }
     
+    def _send_email(self, to_email, subject, html_body):
+        """Core email sending method using proven SellMyShow approach"""
+        try:
+            # Create a multipart/alternative container (proven SellMyShow method)
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = subject
+            msg["From"] = self.username
+            msg["To"] = to_email
+
+            # Optional plain-text version
+            text_body = "Please view this email in an HTML-compatible client."
+
+            # Attach plain text and HTML versions
+            msg.attach(MIMEText(text_body, "plain"))
+            msg.attach(MIMEText(html_body, "html"))
+
+            # Send using proven SellMyShow method
+            with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
+                server.starttls()
+                server.login(self.username, self.password)
+                server.send_message(msg)
+            
+            logger.info(f"Email sent successfully to {to_email}")
+            return {
+                'success': True,
+                'message': 'Email sent successfully'
+            }
+            
+        except Exception as e:
+            logger.error(f"Email sending failed: {str(e)}")
+            return {
+                'success': False,
+                'error': f'Failed to send email: {str(e)}'
+            }
+    
     def _create_transaction_email_body(self, transaction_data):
         """Create HTML email body for transaction notification"""
         timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
         
         return f"""
         <html>
-        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <div style="background-color: #1a1a1a; color: white; padding: 20px; text-align: center;">
-                <h1>🔥 CypherD Wallet</h1>
-            </div>
-            
-            <div style="padding: 20px; background-color: #f5f5f5;">
-                <h2>Transaction Notification</h2>
-                
-                <div style="background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                    <h3>Transaction Details</h3>
-                    <p><strong>From:</strong> {transaction_data.get('from_address', 'N/A')}</p>
-                    <p><strong>To:</strong> {transaction_data.get('to_address', 'N/A')}</p>
-                    <p><strong>Amount:</strong> {transaction_data.get('amount', 0):.6f} ETH</p>
-                    {f"<p><strong>USD Value:</strong> ${transaction_data.get('amount_usd', 0):.2f}</p>" if transaction_data.get('amount_usd') else ""}
-                    <p><strong>Status:</strong> {transaction_data.get('status', 'N/A')}</p>
-                    <p><strong>Timestamp:</strong> {timestamp}</p>
-                </div>
-                
-                <div style="text-align: center; margin: 20px 0;">
-                    <p style="color: #666; font-size: 14px;">
-                        This is an automated notification from CypherD Wallet.<br>
-                        If you didn't perform this transaction, please contact support immediately.
-                    </p>
-                </div>
-            </div>
-            
-            <div style="background-color: #1a1a1a; color: white; padding: 20px; text-align: center;">
-                <p>STAY HARD! 🔥</p>
-            </div>
+        <body style="margin:0; padding:0; font-family: 'Inter', Arial, sans-serif; background-color:#f8fafc; color:#111827;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; margin:auto; background:#ffffff; border:1px solid #e5e7eb; box-shadow:0 4px 6px rgba(0,0,0,0.1); border-radius:8px; overflow:hidden;">
+                <!-- Header -->
+                <tr>
+                    <td style="background-color:#dc2626; padding:20px; text-align:center; color:#ffffff; font-size:20px; font-weight:bold;">
+                        CypherD Wallet - Transaction Notification
+                    </td>
+                </tr>
+
+                <!-- Body -->
+                <tr>
+                    <td style="padding:20px;">
+                        <p style="margin:0 0 15px 0;">Hello,</p>
+                        <p style="margin:0 0 20px 0;">Your transaction has been completed successfully!</p>
+
+                        <table cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse; background-color:#f8fafc; border-radius:6px;">
+                            <tr>
+                                <td><strong>From Address:</strong></td>
+                                <td>{transaction_data.get('from_address', 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>To Address:</strong></td>
+                                <td>{transaction_data.get('to_address', 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Amount:</strong></td>
+                                <td>{transaction_data.get('amount', 0):.6f} ETH</td>
+                            </tr>
+                            <tr>
+                                <td><strong>USD Value:</strong></td>
+                                <td>${transaction_data.get('amount_usd', 0):.2f}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status:</strong></td>
+                                <td>{transaction_data.get('status', 'completed')}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Timestamp:</strong></td>
+                                <td>{timestamp}</td>
+                            </tr>
+                        </table>
+
+                        <div style="background-color:#ecfdf5; border:1px solid #10b981; padding:15px; border-radius:8px; margin:20px 0;">
+                            <h4 style="color:#065f46; margin-top:0;">✅ Transaction Successful</h4>
+                            <p style="color:#065f46; margin-bottom:0;">
+                                Your transaction has been processed and confirmed on the blockchain.
+                            </p>
+                        </div>
+
+                        <p style="font-size:14px; color:#6b7280; text-align:center;">
+                            Thank you for using CypherD Wallet!<br>
+                            Your Web3 transactions are secure and transparent.
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="background-color:#1f2937; color:#ffffff; text-align:center; padding:15px; font-size:14px;">
+                        STAY HARD! 🔥
+                    </td>
+                </tr>
+            </table>
         </body>
         </html>
         """
@@ -150,44 +186,75 @@ class EmailService:
         
         return f"""
         <html>
-        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <div style="background-color: #1a1a1a; color: white; padding: 20px; text-align: center;">
-                <h1>🔥 CypherD Wallet</h1>
-            </div>
-            
-            <div style="padding: 20px; background-color: #f5f5f5;">
-                <h2>New Wallet Created</h2>
-                
-                <div style="background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                    <h3>Wallet Details</h3>
-                    <p><strong>Address:</strong> {wallet_data.get('address', 'N/A')}</p>
-                    <p><strong>Name:</strong> {wallet_data.get('wallet_name', 'N/A')}</p>
-                    <p><strong>Balance:</strong> {wallet_data.get('balance', 0):.6f} ETH</p>
-                    <p><strong>Created:</strong> {timestamp}</p>
-                </div>
-                
-                <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                    <h4 style="color: #856404; margin-top: 0;">⚠️ Important Security Notice</h4>
-                    <p style="color: #856404; margin-bottom: 0;">
-                        Your wallet has been created successfully. Please ensure you have securely stored your mnemonic phrase.
-                        Never share your mnemonic phrase with anyone.
-                    </p>
-                </div>
-                
-                <div style="text-align: center; margin: 20px 0;">
-                    <p style="color: #666; font-size: 14px;">
-                        Welcome to CypherD Wallet!<br>
-                        Your Web3 journey starts now.
-                    </p>
-                </div>
-            </div>
-            
-            <div style="background-color: #1a1a1a; color: white; padding: 20px; text-align: center;">
-                <p>STAY HARD! 🔥</p>
-            </div>
+        <body style="margin:0; padding:0; font-family: 'Inter', Arial, sans-serif; background-color:#f8fafc; color:#111827;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; margin:auto; background:#ffffff; border:1px solid #e5e7eb; box-shadow:0 4px 6px rgba(0,0,0,0.1); border-radius:8px; overflow:hidden;">
+                <!-- Header -->
+                <tr>
+                    <td style="background-color:#dc2626; padding:20px; text-align:center; color:#ffffff; font-size:20px; font-weight:bold;">
+                        CypherD Wallet - New Wallet Created
+                    </td>
+                </tr>
+
+                <!-- Body -->
+                <tr>
+                    <td style="padding:20px;">
+                        <p style="margin:0 0 15px 0;">Hello,</p>
+                        <p style="margin:0 0 20px 0;">Your new wallet has been created successfully!</p>
+
+                        <table cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse; background-color:#f8fafc; border-radius:6px;">
+                            <tr>
+                                <td><strong>Wallet Address:</strong></td>
+                                <td>{wallet_data.get('address', 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Wallet Name:</strong></td>
+                                <td>{wallet_data.get('wallet_name', 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Initial Balance:</strong></td>
+                                <td>{wallet_data.get('balance', 0):.6f} ETH</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Created:</strong></td>
+                                <td>{timestamp}</td>
+                            </tr>
+                        </table>
+
+                        <div style="background-color:#fff3cd; border:1px solid #ffeaa7; padding:15px; border-radius:8px; margin:20px 0;">
+                            <h4 style="color:#856404; margin-top:0;">⚠️ Important Security Notice</h4>
+                            <p style="color:#856404; margin-bottom:0;">
+                                Your wallet has been created successfully. Please ensure you have securely stored your mnemonic phrase.
+                                Never share your mnemonic phrase with anyone.
+                            </p>
+                        </div>
+
+                        <p style="font-size:14px; color:#6b7280; text-align:center;">
+                            Welcome to CypherD Wallet!<br>
+                            Your Web3 journey starts now.
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="background-color:#1f2937; color:#ffffff; text-align:center; padding:15px; font-size:14px;">
+                        STAY HARD! 🔥
+                    </td>
+                </tr>
+            </table>
         </body>
         </html>
         """
 
-# Global instance
-email_service = EmailService()
+# Global instance - Initialize with configuration
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+email_service = EmailService(
+    smtp_server=os.environ.get('SMTP_SERVER', 'smtp.gmail.com'),
+    smtp_port=int(os.environ.get('SMTP_PORT', 587)),
+    username=os.environ.get('SMTP_USERNAME'),
+    password=os.environ.get('SMTP_PASSWORD')
+)

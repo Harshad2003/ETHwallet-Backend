@@ -138,13 +138,24 @@ def get_wallet_balance(wallet_address):
 def list_user_wallets():
     """
     Get all wallets for the authenticated user
+    
+    Query Parameters:
+    - include_mnemonics: true/false (default: false)
+      WARNING: Setting include_mnemonics=true is EXTREMELY DANGEROUS!
+      Only use for development/testing. NEVER use in production!
     """
     try:
         user_id = get_jwt_identity()
         if not user_id:
             return jsonify({'error': 'User not authenticated'}), 401
         
-        result = wallet_service.get_user_wallets(user_id)
+        # Check if mnemonics should be included (DEVELOPMENT ONLY!)
+        include_mnemonics = request.args.get('include_mnemonics', 'false').lower() == 'true'
+        
+        if include_mnemonics:
+            logger.warning(f"SECURITY RISK: User {user_id} requested mnemonics in wallet list")
+        
+        result = wallet_service.get_user_wallets(user_id, include_mnemonics=include_mnemonics)
         
         if result['success']:
             return jsonify(result), 200

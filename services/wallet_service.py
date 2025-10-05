@@ -181,15 +181,41 @@ class WalletService:
                 'error': f'Failed to get balance: {str(e)}'
             }
     
-    def get_user_wallets(self, user_id):
-        """Get all wallets for a user"""
+    def get_user_wallets(self, user_id, include_mnemonics=False):
+        """Get all wallets for a user
+        
+        WARNING: include_mnemonics=True is EXTREMELY DANGEROUS!
+        Only use for development/testing. NEVER use in production!
+        """
         try:
             wallets = Wallet.query.filter_by(user_id=user_id).all()
             
+            wallet_data = []
+            for wallet in wallets:
+                wallet_dict = wallet.to_dict()
+                
+                # SECURITY WARNING: Only include mnemonics if explicitly requested
+                if include_mnemonics:
+                    try:
+                        # Decrypt mnemonic for development/testing only
+                        decrypt_result = self.crypto_utils.decrypt_mnemonic(wallet.mnemonic_encrypted)
+                        if decrypt_result['success']:
+                            wallet_dict['mnemonic'] = decrypt_result['mnemonic']
+                            logger.warning(f"SECURITY RISK: Returning mnemonic for wallet {wallet.address}")
+                        else:
+                            wallet_dict['mnemonic'] = "DECRYPTION_FAILED"
+                            logger.error(f"Failed to decrypt mnemonic for wallet {wallet.address}")
+                    except Exception as e:
+                        wallet_dict['mnemonic'] = "DECRYPTION_ERROR"
+                        logger.error(f"Mnemonic decryption error for wallet {wallet.address}: {str(e)}")
+                
+                wallet_data.append(wallet_dict)
+            
             return {
                 'success': True,
-                'wallets': [wallet.to_dict() for wallet in wallets],
-                'count': len(wallets)
+                'wallets': wallet_data,
+                'count': len(wallets),
+                'security_warning': 'Mnemonics included - DEVELOPMENT ONLY!' if include_mnemonics else None
             }
             
         except Exception as e:

@@ -311,7 +311,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/wallet/list",
+							"raw": "{{base_url}}/api/wallet/list?include_mnemonics=false",
 							"host": [
 								"{{base_url}}"
 							],
@@ -319,9 +319,48 @@
 								"api",
 								"wallet",
 								"list"
+							],
+							"query": [
+								{
+									"key": "include_mnemonics",
+									"value": "false",
+									"description": "WARNING: Set to 'true' ONLY for development! NEVER in production!"
+								}
 							]
 						},
-						"description": "Get all wallets for the authenticated user"
+						"description": "Get all wallets for the authenticated user. Use include_mnemonics=true ONLY for development/testing!"
+					},
+					"response": []
+				},
+				{
+					"name": "List User Wallets (WITH MNEMONICS - DEV ONLY)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/wallet/list?include_mnemonics=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"wallet",
+								"list"
+							],
+							"query": [
+								{
+									"key": "include_mnemonics",
+									"value": "true",
+									"description": "⚠️ SECURITY RISK: Only for development!"
+								}
+							]
+						},
+						"description": "⚠️ DANGEROUS: Get wallets WITH mnemonics. ONLY for development/testing!"
 					},
 					"response": []
 				},
