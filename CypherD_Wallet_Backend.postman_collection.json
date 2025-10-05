@@ -1,0 +1,785 @@
+{
+	"info": {
+		"_postman_id": "cypherd-wallet-backend",
+		"name": "CypherD Wallet Backend - SQLite",
+		"description": "BULLETPROOF Postman collection for testing CypherD Wallet Backend API\n\n🔥 Complete API testing suite covering:\n- User Authentication\n- Wallet Management\n- Transaction Processing\n- Price Conversion\n- Email Notifications\n\nSTAY HARD!",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"health"
+							]
+						},
+						"description": "Check if the API is running and healthy"
+					},
+					"response": []
+				},
+				{
+					"name": "User Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"TestPassword123!\",\n  \"first_name\": \"Test\",\n  \"last_name\": \"User\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						},
+						"description": "Create a new user account"
+					},
+					"response": []
+				},
+				{
+					"name": "User Signin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"TestPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/signin",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						},
+						"description": "Authenticate user and get JWT tokens"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"profile"
+							]
+						},
+						"description": "Get authenticated user's profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"Updated\",\n  \"last_name\": \"Name\",\n  \"phone_number\": \"+1234567890\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"profile"
+							]
+						},
+						"description": "Update user profile information"
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"current_password\": \"TestPassword123!\",\n  \"new_password\": \"NewPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/change-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"change-password"
+							]
+						},
+						"description": "Change user password"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{refresh_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						},
+						"description": "Refresh access token using refresh token"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints for user management"
+		},
+		{
+			"name": "Wallet Management",
+			"item": [
+				{
+					"name": "Create New Wallet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"wallet_name\": \"My First Wallet\",\n  \"is_primary\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/wallet/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"wallet",
+								"create"
+							]
+						},
+						"description": "Create a new wallet with random starting balance"
+					},
+					"response": []
+				},
+				{
+					"name": "Import Existing Wallet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mnemonic\": \"abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about\",\n  \"wallet_name\": \"Imported Wallet\",\n  \"is_primary\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/wallet/import",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"wallet",
+								"import"
+							]
+						},
+						"description": "Import existing wallet using mnemonic phrase"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Wallet Balance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/wallet/balance/{{wallet_address}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"wallet",
+								"balance",
+								"{{wallet_address}}"
+							]
+						},
+						"description": "Get balance for a specific wallet address"
+					},
+					"response": []
+				},
+				{
+					"name": "List User Wallets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/wallet/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"wallet",
+								"list"
+							]
+						},
+						"description": "Get all wallets for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Prepare Transfer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from_address\": \"{{wallet_address}}\",\n  \"to_address\": \"0x742d35Cc6634C0532925a3b8D4C9db96c728b0B4\",\n  \"amount\": 0.5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/wallet/transfer/prepare",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"wallet",
+								"transfer",
+								"prepare"
+							]
+						},
+						"description": "Prepare a transfer by creating a message for signing"
+					},
+					"response": []
+				},
+				{
+					"name": "Prepare Transfer (USD)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from_address\": \"{{wallet_address}}\",\n  \"to_address\": \"0x742d35Cc6634C0532925a3b8D4C9db96c728b0B4\",\n  \"amount_usd\": 1000.0\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/wallet/transfer/prepare",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"wallet",
+								"transfer",
+								"prepare"
+							]
+						},
+						"description": "Prepare a transfer using USD amount (converts to ETH)"
+					},
+					"response": []
+				},
+				{
+					"name": "Sign Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"message\": \"{{transfer_message}}\",\n  \"wallet_address\": \"{{wallet_address}}\",\n  \"mnemonic\": \"{{mnemonic_phrase}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/wallet/sign-message",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"wallet",
+								"sign-message"
+							]
+						},
+						"description": "Sign a message with wallet private key"
+					},
+					"response": []
+				},
+				{
+					"name": "Execute Transfer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"message\": \"{{transfer_message}}\",\n  \"signature\": \"{{signature}}\",\n  \"from_address\": \"{{wallet_address}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/wallet/transfer/execute",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"wallet",
+								"transfer",
+								"execute"
+							]
+						},
+						"description": "Execute a transfer by verifying signature and updating balances"
+					},
+					"response": []
+				}
+			],
+			"description": "Wallet management endpoints"
+		},
+		{
+			"name": "Price & Conversion",
+			"item": [
+				{
+					"name": "Get ETH Price",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/wallet/price/eth",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"wallet",
+								"price",
+								"eth"
+							]
+						},
+						"description": "Get current ETH price in USD"
+					},
+					"response": []
+				},
+				{
+					"name": "Convert USD to ETH",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usd_amount\": 1000.0\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/wallet/price/convert",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"wallet",
+								"price",
+								"convert"
+							]
+						},
+						"description": "Convert USD amount to ETH using Skip API"
+					},
+					"response": []
+				}
+			],
+			"description": "Price fetching and conversion endpoints"
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Get Transaction History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/transactions/history/{{wallet_address}}?limit=20&offset=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"transactions",
+								"history",
+								"{{wallet_address}}"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						},
+						"description": "Get transaction history for a wallet address"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transaction Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/transactions/stats/{{wallet_address}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"transactions",
+								"stats",
+								"{{wallet_address}}"
+							]
+						},
+						"description": "Get transaction statistics for a wallet address"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transaction Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/transactions/{{transaction_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"transactions",
+								"{{transaction_id}}"
+							]
+						},
+						"description": "Get details of a specific transaction"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Recent Transactions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/transactions/recent?limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"transactions",
+								"recent"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Get recent transactions across all user wallets"
+					},
+					"response": []
+				},
+				{
+					"name": "Send Transaction (Alternative)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from_address\": \"{{wallet_address}}\",\n  \"to_address\": \"0x742d35Cc6634C0532925a3b8D4C9db96c728b0B4\",\n  \"amount\": 0.1,\n  \"message\": \"{{transfer_message}}\",\n  \"signature\": \"{{signature}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/transactions/send",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"transactions",
+								"send"
+							]
+						},
+						"description": "Send a transaction (alternative endpoint)"
+					},
+					"response": []
+				}
+			],
+			"description": "Transaction management and history endpoints"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Set base URL if not already set",
+					"if (!pm.environment.get('base_url')) {",
+					"    pm.environment.set('base_url', 'http://localhost:5001');",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-save tokens from auth responses",
+					"if (pm.response.json() && pm.response.json().access_token) {",
+					"    pm.environment.set('access_token', pm.response.json().access_token);",
+					"}",
+					"",
+					"if (pm.response.json() && pm.response.json().refresh_token) {",
+					"    pm.environment.set('refresh_token', pm.response.json().refresh_token);",
+					"}",
+					"",
+					"// Auto-save wallet data from wallet creation",
+					"if (pm.response.json() && pm.response.json().wallet) {",
+					"    pm.environment.set('wallet_address', pm.response.json().wallet.address);",
+					"    if (pm.response.json().mnemonic) {",
+					"        pm.environment.set('mnemonic_phrase', pm.response.json().mnemonic);",
+					"    }",
+					"}",
+					"",
+					"// Auto-save transfer message from prepare transfer",
+					"if (pm.response.json() && pm.response.json().message) {",
+					"    pm.environment.set('transfer_message', pm.response.json().message);",
+					"}",
+					"",
+					"// Auto-save signature from sign message",
+					"if (pm.response.json() && pm.response.json().signature) {",
+					"    pm.environment.set('signature', pm.response.json().signature);",
+					"}",
+					"",
+					"// Auto-save transaction ID from transaction responses",
+					"if (pm.response.json() && pm.response.json().transaction && pm.response.json().transaction.id) {",
+					"    pm.environment.set('transaction_id', pm.response.json().transaction.id);",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5001",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "wallet_address",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "mnemonic_phrase",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "transfer_message",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "signature",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "transaction_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
